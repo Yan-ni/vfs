@@ -23,7 +23,7 @@ app.get('/api/:date', async (req, res) => {
 			dossiersRestants
 		});
 	} catch (error) {
-		const dossiersRestants = await requestVFSFiles(dateDepot, [1, 1], [1, 10]);
+		const dossiersRestants = await requestVFSFiles(dateDepot, [1, 1], [2, 100]);
 
 		res.json({
 			dossiersRestants
