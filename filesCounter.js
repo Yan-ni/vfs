@@ -1,8 +1,18 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
 const path = require("path");
-
-module.exports = async function requestVFSFiles(date, start, end) {
+/**
+ *
+ * @param {Number} date /DDMMYY/
+ * @param {Array} fileNumberStart
+ * @param {Array} fileNumberEnd
+ * @returns {String} logs
+ */
+module.exports = async function requestVFSFiles(
+  date,
+  fileNumberStart,
+  fileNumberEnd
+) {
   let log = "";
 
   const IntToStringof4 = (number) => {
@@ -11,10 +21,10 @@ module.exports = async function requestVFSFiles(date, start, end) {
     return "0000".slice(0, -number.length) + number;
   };
 
-  for (let i = start[0]; i <= end[0]; i++) {
+  for (let i = fileNumberStart[0]; i <= fileNumberEnd[0]; i++) {
     for (
-      let j = i === start[0] ? start[1] : 0;
-      j <= (i === end[0] ? end[1] : 300);
+      let j = i === fileNumberStart[0] ? fileNumberStart[1] : 0;
+      j <= (i === fileNumberEnd[0] ? fileNumberEnd[1] : 300);
       j++
     ) {
       await fetch(
@@ -22,15 +32,21 @@ module.exports = async function requestVFSFiles(date, start, end) {
           j
         )}/0${i}&csrfmiddlewaretoken=F6j3a1tYNSEtc5Ppqm1AFhhedNxgNVuigoNe4wYsfPCC4BhpzdOJWrrt5eRZ9PC9`
       )
-        .then((res) => {
+        .then((fastMailApiResponse) => {
           console.log(
             `Dossier N°${IntToStringof4(j)}/0${i} : ${
-              res.status === 200 ? "trouvé" : "non trouvé"
+              fastMailApiResponse.status === 200 ? "trouvé" : "non trouvé"
             }`
           );
-          if (res.status === 200) {
-            res.json().then((response) => {
-              if (response[0].length === 0)
+
+          return fastMailApiResponse;
+        })
+        .then((fastMailApiResponse) => {
+          if (fastMailApiResponse.status === 200) {
+            fastMailApiResponse.json().then((fastMailApiResponseJSON) => {
+              // the fast mail api response with an array of two elements
+
+              if (fastMailApiResponseJSON[0].length === 0)
                 log += `ALGI/${date}/${IntToStringof4(j)}/0${i}\n`;
             });
           }
