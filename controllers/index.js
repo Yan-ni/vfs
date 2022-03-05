@@ -1,4 +1,4 @@
-const requestVFSFiles = require("./filesCounter");
+const requestVFSFiles = require("../filesCounter");
 
 module.exports = {
   view: (req, res) =>

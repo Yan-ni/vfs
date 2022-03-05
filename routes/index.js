@@ -1,10 +1,10 @@
 const router = require("express").Router();
 
-const controller = require('./controller');
+const controllers = require('../controllers');
 
-router.get("/", controller.view);
+router.get("/", controllers.view);
 
-router.get("/api/:date", controller.api);
+router.get("/api/:date", controllers.api);
 
 router.use("*", (req, res) => res.sendStatus(404));
 
